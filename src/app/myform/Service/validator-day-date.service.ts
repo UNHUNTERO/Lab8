@@ -13,7 +13,7 @@ export class ValidatorDayDateService {
     validate_diff_date(date1:string,date2:string){
         let d1 = StringtoDate(date1);
         let d2 = StringtoDate(date2);
-        if(this.diff_years(d1,d2)<18)
+        if(this.diff_years(d1,d2)<1)
             return false;
         else return true;
     }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,EventEmitter,Input,Output } from '@angular/core';
 import { FormGroup,FormControl,FormArray,FormBuilder, Validators } from '@angular/forms';
 import { Catalog } from './class/catalog';
 import { dateValidator } from './Service/dateValidators';
@@ -17,11 +17,12 @@ export class MyformComponent  implements OnInit {
   catalog!: Catalog;
 
   datePattern = "^[0-9]{2}[.-/][0-9]{2}[.-/][0-9]{4}$";
+  @Output() catalogAdd: EventEmitter<Catalog> = new EventEmitter<Catalog>();
   constructor(private fb:FormBuilder ,private alertController:AlertController) {
     this.catalogForm = this.fb.group({
-      npap_name: ['',[Validators.required]],
+      npap_name: ['',[]],
       npap_id:[''],
-      npap_rdate: [' ',Validators.pattern(this.datePattern)],
+      npap_rdate: [' ',[Validators.pattern(this.datePattern)]],
       npap_pg: [' '],
       articles: new FormArray([new FormControl]),
     });
@@ -46,9 +47,10 @@ export class MyformComponent  implements OnInit {
   let pg = this.catalogForm.value.npap_pg;
   let articles = this.catalogForm.value.articles;
   let valid = new ValidatorDayDateService();
-  if(valid.validate_diff_date(rd,"17.05.2023")){
+  if(valid.validate_diff_date(rd,"30.05.2023")){
     this.catalog = new Catalog(name,id,rd,pg,articles);
     console.log("Submit");
+    this.catalogAdd.emit(this.catalog);
   }else
     this.presentAlert("")
 }
